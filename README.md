@@ -1,75 +1,96 @@
 # Aurelia Hospital Management System
 
-A role-based hospital management desktop application built with Java Swing and MySQL. It streamlines the day-to-day operations of a hospital across administration, medical staff, pharmacy, reception, and surgical theater departments.
+A Java Swing desktop application for managing hospital operations — staff, patients,
+appointments, pharmacy stock, invoicing, and operating-theater workflows — built with
+NetBeans, backed by MySQL, and styled with FlatLaf.
+
+## Project Structure
+
+```
+AureliaHospital/
+├── src/lk/aurelia/
+│   ├── Gui/            # Main windows: Splash, SignIn & role dashboards (JFrames)
+│   ├── Panel/          # Feature panels swapped into each dashboard
+│   ├── Dialog/         # "View more" detail dialogs
+│   ├── component/      # Custom Swing widgets (rounded fields, buttons, tables)
+│   │   └── table/      # Custom table renderers & scroll UI
+│   ├── connection/     # MySQL JDBC helper
+│   ├── model/          # POJOs (e.g. logged-in user session)
+│   ├── Validation/     # Regex-based input validators
+│   ├── reports/        # Compiled JasperReports (.jasper)
+│   └── img/            # Images, logos & icons
+├── lib/                # Third-party JARs (MySQL driver, FlatLaf, JasperReports, ...)
+├── nbproject/          # NetBeans project configuration (Ant)
+├── test/               # Test sources
+└── build.xml           # Apache Ant build script → dist/AureliaHospital.jar
+```
+
+**Entry point:** `lk.aurelia.Gui.Splash` (animated splash screen → sign-in)
 
 ## Features
 
-- **Splash Screen & Authentication** — animated splash screen on launch followed by secure sign-in.
-- **Role-Based Dashboards** — dedicated dashboards for Admin, Manager, Doctor, Pharmacist, Reception, and Theater users.
-- **Staff Management** — manage doctors, nurses, pharmacists, receptionists, and theater staff with detailed profile views.
-- **Patient Registration & Scheduling** — register patients and book/manage appointment schedules at reception.
-- **Pharmacy Module** — stock management, Goods Received Notes (GRN), and patient invoicing/billing.
-- **Theater Module** — manage surgical theater patients and issue procedure slips.
-- **Report Generation** — printable JasperReports for doctor/nurse/pharmacist details, schedules, invoices, patient lists, and theater slips.
-- **Input Validation** — dedicated validation layer for form inputs.
+- **Animated splash screen** with database-connection progress leading to a login screen
+- **Role-based access control** — six dedicated dashboards launched on sign-in:
+  Admin, Doctor, Reception, Manager, Pharmacist, and Theater
+- **Staff management (CRUD)** — doctors, nurses, pharmacists, receptionists, and
+  operating-theater staff, each with detail dialogs and printable reports
+- **Reception module** — patient registration and appointment scheduling
+- **Pharmacy module** — stock management, GRN (goods received notes), and customer
+  invoicing
+- **Theater module** — operating-theater management and theater patient handling with
+  printable patient slips
+- **Report generation** — 9 JasperReports templates (staff details, schedules, invoices,
+  theater slips) viewable via an embedded JasperViewer
+- **Input validation** — email, Sri Lankan mobile/landline numbers, NIC, password
+  strength, and date-time formats
+- **Polished UX** — toast notifications, hover effects, custom scroll bars, and rounded
+  form controls
 
 ## Design
 
-- **Modern FlatLaf look-and-feel** with light theme and IntelliJ themes support.
-- **Custom UI kit** — rounded buttons, text fields, password fields, combo boxes, text areas, hover effects, and custom scrollbars (`lk.aurelia.component`).
-- **Custom tables** — styled table headers, boolean/text-area cell renderers, row hover highlighting, and custom scroll buttons (`lk.aurelia.component.table`).
-- **Toast notifications** for non-intrusive user feedback.
-- **NetBeans GUI Builder (Matisse)** forms (`.form` files) paired with every window, dialog, and panel class.
-- **Splash → Sign In → Dashboard flow** routing each user to their role-specific workspace.
-
-## Structure
-
-```
-src/lk/aurelia/
-├── Gui/          # Main windows: Splash, SignIn & 6 role dashboards
-├── Panel/        # Embedded content panels (management, pharmacy,
-│                 #   reception, theater modules)
-├── Dialog/       # "View more" detail dialogs & patient selector
-├── component/    # Custom Swing widgets
-│   └── table/    # Custom table renderers & helpers
-├── connection/   # MySQL JDBC connection singleton
-├── model/        # Data models (user details)
-├── Validation/   # Input validation utilities
-├── reports/      # Compiled JasperReports (.jasper)
-└── img/          # Images: logos, icons, role photos
-```
-
-Main entry point: `lk.aurelia.Gui.Splash`
+- **Layered architecture:** `Gui` windows host swappable `Panel` components that contain
+  view + controller logic; a lightweight `model.userDetails` POJO carries the signed-in
+  user between screens; all persistence flows through `connection.MySQL`
+- **Static singleton access:** a single shared JDBC `Connection` managed by the static
+  `MySQL` helper exposing `search()` / `iud()` methods; each dashboard exposes itself as
+  a static singleton instance
+- **Enum-strategy validation:** `Validation` enum maps each field type to a compiled
+  regex (`EMAIL_VALIDATION`, NIC, phone, password strength, datetime)
+- **Manual panel switching:** dashboards swap content panels at runtime instead of using
+  `CardLayout`
+- **Reusable component library:** hand-rolled rounded widgets (`RoundButton`,
+  `RoundTextField`, ...) and pluggable table renderers keep the UI consistent
+- **FlatLaf theming** with SVG icon support for a modern flat look across all screens
 
 ## Technologies
 
-| Technology | Purpose |
+| Category | Technology |
 |---|---|
-| Java 8 | Core application language |
-| Swing (NetBeans GUI Builder) | Desktop UI |
-| FlatLaf 3.1.1 (+ themes/extras) | Modern look-and-feel |
-| MySQL + Connector/J 8.0.24 | Database & JDBC connectivity |
-| JasperReports 6.21.3 | Report generation (PDF/print) |
-| iText / OpenPDF | PDF document support |
-| jCalendar 1.4 | Date picker components |
-| swing-toast-notifications 1.0.3 | Toast notifications |
-| Raven 8.0.0 | Blur effects library |
-| TimingFramework | Animation timing |
-| jSVG 1.4.0 | SVG rendering |
-| Launch4j | Windows EXE wrapper |
+| Language | Java SE 8 |
+| Build | Apache Ant (NetBeans project) |
+| UI | Java Swing (NetBeans GUI Builder `.form` files) |
+| Look & feel | FlatLaf 3.x (+ IntelliJ themes, FlatSVGIcon/jsvg) |
+| Database | MySQL (JDBC — `mysql-connector-java-8.0.24`) |
+| Reporting | JasperReports 6.x (+ iText/OpenPDF for PDF output) |
+| Date picking | JCalendar (`JDateChooser`) |
+| Notifications | Raven swing-toast-notifications |
+| Animation | TimingFramework |
+| Packaging | launch4j (Windows launcher) |
 
 ## Getting Started
 
 ### Prerequisites
 
-- JDK 8 or later
-- MySQL Server with the `aurelia_db` database (default connection: `jdbc:mysql://localhost:3306/aurelia_db`, user `root`)
-- NetBeans (recommended, for opening the project)
+- JDK 8+
+- NetBeans (Ant-based Java SE project support)
+- MySQL Server with a database named `aurelia_db`
+  (connection settings are configured in `src/lk/aurelia/connection/MySQL.java`)
 
-### Run
+### Build & Run
 
-Open the project in NetBeans and run it, or from the command line:
+1. Open the project in NetBeans and run it (`F6`), or build from the CLI:
 
-```bash
-java -jar dist/AureliaHospital.jar
-```
+   ```sh
+   ant clean jar
+   java -jar dist/AureliaHospital.jar
+   ```

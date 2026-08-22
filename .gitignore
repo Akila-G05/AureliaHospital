@@ -1,11 +1,8 @@
-# NetBeans build output
 build/
 dist/
-
-# NetBeans private user config
-nbproject/private/
-
-# Runtime log files
 *.log
 *.log.*
 *.lck
+nbproject/private/
+nbproject/build-impl.xml
+nbproject/genfiles.properties
