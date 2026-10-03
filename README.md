@@ -19,6 +19,7 @@ AureliaHospital/
 │   ├── Validation/     # Regex-based input validators
 │   ├── reports/        # Compiled JasperReports (.jasper)
 │   └── img/            # Images, logos & icons
+├── db/                 # init.sql — schema + redacted demo data for `aurelia_db`
 ├── lib/                # Third-party JARs (MySQL driver, FlatLaf, JasperReports, ...)
 ├── nbproject/          # NetBeans project configuration (Ant)
 ├── test/               # Test sources
@@ -83,8 +84,24 @@ AureliaHospital/
 
 - JDK 8+
 - NetBeans (Ant-based Java SE project support)
-- MySQL Server with a database named `aurelia_db`
+- MySQL Server
   (connection settings are configured in `src/lk/aurelia/connection/MySQL.java`)
+
+### Database setup
+
+Import the schema and demo data:
+
+```sh
+mysql -u root -p < db/init.sql
+```
+
+This creates the `aurelia_db` database with all 22 tables, including staff accounts for each
+role, patients, channeling, theater operations, pharmacy stock, and invoices.
+
+> **Note:** the seed data in `db/init.sql` is **anonymised** — all names, emails, phone
+> numbers, addresses, passwords, and the admin passkey are placeholders
+> (`user1@example.com` / `password`, etc.) rather than real records. Every demo account
+> shares the password `password`.
 
 ### Build & Run
 
