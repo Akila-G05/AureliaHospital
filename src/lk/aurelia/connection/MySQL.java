@@ -9,8 +9,8 @@ public class MySQL {
 
     public static Connection connection;
     private static String path = "jdbc:mysql://localhost:3306/aurelia_db";
-    private static String USER =  "root";
-    private static String PASSWORD = "akila@2005";
+    private static String USER =  "user";
+    private static String PASSWORD = "password";
     
     static{
         try {
